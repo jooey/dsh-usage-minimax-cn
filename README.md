@@ -23,21 +23,12 @@
 </p>
 
 ```bash
-cd ~/.dsh/profiles
-npm install dsh-usage-minimax-cn --save --registry=https://registry.npmjs.org
-```
-
-然后在 `~/.dsh/profiles/web/cordis.patch.yml` 里追加：
-
-```yaml
-- insert:
-    - id: minimax-cn-usage
-      name: 'dsh-usage-minimax-cn'
+dsh plugin --profile web add dsh-usage-minimax-cn
 ```
 
 > 装完**刷新 web GUI**（`Ctrl+Shift+R`），模型选择器切到 **MiniMax（minimax-cn）** provider，输入框右下角就出读条了。
 >
-> 其他安装方式（DSH 自带 plugin 命令 / GitHub git 安装 / PowerShell / 源码）见下方 <a href="#install">Install</a>。
+> 其他安装方式（手动 npm + patch / GitHub git 安装 / PowerShell / 源码）见下方 <a href="#install">Install</a>。
 
 一个用于 **DSH（DeepSeek Harness）** 的插件：把你的 **MiniMax（minimax-cn）Coding Plan 订阅配额**直接显示在对话里，并且**只在当前会话选中 MiniMax provider（`minimax-cn`）时展示**；切到其他模型/供应商时自动隐藏。
 
