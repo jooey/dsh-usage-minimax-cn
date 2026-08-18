@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+node_modules/
+npm-debug.log*
+.npm/
+.eslintcache
