@@ -1,7 +1,7 @@
 // Standalone smoke test for the dsh-usage-minimax-cn plugin core logic
 // (imports lib/logic.js, which is dependency-free).
 // Runs WITHOUT DSH: provides a fake ctx.credentials backed by a key from the
-// real credentials file OR a `MINIMAX_API_KEY` environment variable, calls
+// real credentials file OR a `MINIMAX_CN_API_KEY` environment variable, calls
 // fetchUsage + formatUsages, and prints the result.
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -15,9 +15,8 @@ const {
   formatPercent,
   formatUsageAsJson,
   formatUsages,
-  computePercent,
+  normalizeWindow,
   parseUsageArgs,
-  resolveApiKey,
   USAGE_HELP
 } = await import(pathToFileURL(join(pluginDir, "lib", "logic.js")).href);
 
@@ -79,10 +78,14 @@ console.log(formatUsageAsJson(result.usage, "weekly"));
 console.log("--- normalized snapshot ---");
 const snapshot = await fetchUsageSnapshot(ctx.credentials);
 console.log(JSON.stringify(snapshot, null, 2));
-console.log("--- formatPercent / computePercent ---");
-console.log(formatPercent(computePercent(100, 1000)));
-console.log(formatPercent(computePercent(0, 0)));
-console.log(formatPercent(computePercent("not-a-number", "also-not")));
+console.log("--- formatPercent ---");
+console.log("formatPercent(57):", formatPercent(57));
+console.log("formatPercent(0):", formatPercent(0));
+console.log("formatPercent(null):", formatPercent(null));
+console.log("formatPercent('bad'):", formatPercent("bad"));
+console.log("--- normalizeWindow ---");
+console.log("normalizeWindow(null):", normalizeWindow(null));
+console.log("normalizeWindow({}):", JSON.stringify(normalizeWindow({})));
 console.log("--- parseUsageArgs ---");
 console.log("undefined ->", parseUsageArgs(undefined));
 console.log("'rolling' ->", parseUsageArgs("rolling"));

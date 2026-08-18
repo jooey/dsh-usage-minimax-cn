@@ -1,5 +1,16 @@
 # Release Notes
 
+## v1.1.0
+
+**极简 DSH 用量监控 · 统一格式**
+
+- 读条标签 `general` 改为 `coding`（API 内部名 → 用户视角的服务名），读条显示 `coding x% (倒计时) · video x% (倒计时)`
+- 与五插件家族（OpenCode Go / DeepSeek / MiniMax / Kimi / GLM）格式统一
+- README 重写：中英双语，主打「极简 DSH 用量监控」
+- 修复 smoke test（`test/logic.mjs`）引用不存在的导出
+
+**English**: chip label `general` renamed to `coding`; format unified with the five-plugin family; bilingual README rewrite; smoke test export fixes.
+
 ## v1.0.0
 
 DSH 插件首发：在对话里查看你的 MiniMax（minimax-cn）Coding Plan 订阅配额。

@@ -1,77 +1,134 @@
-# dsh-usage-minimax-cn
+<p align="center">
+  <img src="https://img.shields.io/npm/v/dsh-usage-minimax-cn" alt="npm version" />
+  <img src="https://img.shields.io/npm/dw/dsh-usage-minimax-cn" alt="npm downloads" />
+  <img src="https://img.shields.io/npm/l/dsh-usage-minimax-cn" alt="license" />
+</p>
 
-A DSH plugin that displays your MiniMax (minimax-cn) Coding Plan quota in the chat and as a composer readout. The readout only renders while the session's selected provider is `minimax-cn`; switching to any other provider hides it.
+<h1 align="center">dsh-usage-minimax-cn</h1>
 
-DSH 插件，把 MiniMax（minimax-cn）Coding Plan 订阅配额显示在对话里和输入框右下角的常驻读条上。读条只在当前会话的 provider 为 `minimax-cn` 时显示，切到其他 provider 自动隐藏。
+<p align="center">
+  <strong>极简 DSH 用量监控 · Minimal DSH usage monitor</strong>
+</p>
 
-[![npm](https://img.shields.io/npm/v/dsh-usage-minimax-cn)](https://www.npmjs.com/package/dsh-usage-minimax-cn)
-[![GitHub](https://img.shields.io/github/license/jooey/dsh-usage-minimax-cn)](https://github.com/jooey/dsh-usage-minimax-cn)
+<p align="center">
+  <a href="https://www.npmjs.com/package/dsh-usage-minimax-cn">npm</a>
+  · <a href="https://github.com/jooey/dsh-usage-minimax-cn">GitHub</a>
+  · <a href="#install-install">Install</a>
+</p>
 
 ---
 
-## Install / 安装
+**中文** · [English](#english)
+
+把 MiniMax Coding Plan 订阅配额放进 DSH 对话界面：输入 `/usage-minimax-cn` 查看完整报告；选中 MiniMax 模型时，输入框右下角常驻读条，每分钟自动刷新。切到其他模型自动隐藏。
+
+- **右下角读条**：按服务分行显示 `coding x% (倒计时) · video x% (倒计时)`，coding / video 各自独立配额
+- **`/usage-minimax-cn` 命令**：支持 `[rolling|weekly|monthly]` 窗口过滤 + `--json` 机器可读输出
+- **密钥安全**：只在 DSH 主机端解析，绝不进浏览器
+
+## 系列插件 / Family
+
+同一套极简监控，覆盖五家服务商，格式统一（`Rolling x% (倒计时) · Weekly …`）：
+
+| 插件 | 服务商 | 监控内容 |
+|---|---|---|
+| `dsh-usage-opencode-go` | OpenCode Go | Rolling / Weekly / Monthly 配额 |
+| `dsh-usage-deepseek` | DeepSeek | 账户余额 + 波峰/波谷 |
+| `dsh-usage-minimax-cn` | MiniMax Coding Plan | coding / video 分服务配额 |
+| `dsh-usage-kimi-cn` | Kimi Coding Plan | Rolling / Weekly 配额 |
+| `dsh-usage-glm-cn` | Z.ai GLM Coding Plan | Rolling / Weekly / MCP 配额 |
+
+## 先决条件 / Prerequisites
+
+- 已安装 **DSH**（Node.js >= 20）：`npm install -g @deepseek-ai/dsh`
+- **MiniMax API Key**，写入 `~/.dsh/.credentials.yaml`（与 `dsh-llm-minimax-cn` 共用同一 key，已配置则无需重复）：
+
+```yaml
+MINIMAX_CN_API_KEY: <你的 key>
+```
+
+（或 `export MINIMAX_CN_API_KEY=<key>`）
+
+## Install 安装
 
 ```bash
-dsh plugin --profile web add dsh-usage-minimax-cn
+cd ~/.dsh/profiles
+npm install dsh-usage-minimax-cn --save --registry=https://registry.npmjs.org
 ```
 
-DSH will fetch from npm, copy into `~/.dsh/profiles/node_modules/`, and patch `cordis.patch.yml` (idempotent). Refresh the DSH web GUI with `Ctrl+Shift+R` and pick a model under the **MiniMax (minimax-cn)** provider.
+然后在 `~/.dsh/profiles/web/cordis.patch.yml` 追加：
 
-The plugin reads `MINIMAX_CN_API_KEY` from the DSH harness credentials seam — the same key already configured for `dsh-llm-minimax-cn`, so no extra setup is needed.
+```yaml
+- insert:
+    - id: minimax-cn-usage
+      name: 'dsh-usage-minimax-cn'
+```
 
-DSH 会从 npm 拉取、拷贝到 `~/.dsh/profiles/node_modules/`，并把条目写入 `cordis.patch.yml`（幂等）。刷一下 web GUI（`Ctrl+Shift+R`），模型选择器切到 **MiniMax（minimax-cn）** provider 即可。`MINIMAX_CN_API_KEY` 通过 DSH harness credentials seam 读取——和 `dsh-llm-minimax-cn` 共用同一个 key 名，无需重复配置。
+重启 / 刷新 web GUI 生效。
 
-## Usage / 用法
+<details>
+<summary>其他安装方式（一键 / git）</summary>
 
-### Slash command
+```bash
+# 一条命令装到 DSH（自动写 patch，幂等）
+dsh plugin --profile web add dsh-usage-minimax-cn
+
+# git 安装
+dsh plugin --profile web add github:jooey/dsh-usage-minimax-cn
+```
+
+</details>
+
+## Usage 使用
+
+- 对话里输入 **`/usage-minimax-cn`** → 完整配额报告（可选 `[rolling|weekly|monthly]` 过滤、`--json` 输出）
+- 选中 **MiniMax** 模型 → 右下角读条出现
 
 ```text
-/usage-minimax-cn [rolling|weekly|monthly] [--json|-j] [--help|-h]
+右下角读条：
+
+coding 61.0% (13m) · video 0.0% (9h 13m)
 ```
 
-- No arguments — print every model's quota (rolling / weekly / monthly windows with percent used, used/total counts, and time until reset).
-- `rolling` / `weekly` / `monthly` — keep only that window.
-- `--json` / `-j` — print the raw API payload as JSON.
-- `--help` / `-h` — print usage.
+## Troubleshooting
 
-不带参数：打印每个 model 的完整配额报告（rolling / weekly / monthly 三窗口，含已用百分比、已用/总量、重置倒计时）。`rolling` / `weekly` / `monthly` 只显示对应窗口。`--json` 输出 Coding Plan 接口原始 JSON。`--help` 打印帮助。
-
-### Composer readout
-
-When the selected model is on `minimax-cn`, a small chip appears in the bottom-right of the input box showing per-model remaining-percent and time until reset. Refreshes every 60 seconds.
-
-当模型 provider 为 `minimax-cn` 时，输入框右下角会出现一个常驻小读条，按 model 展示剩余百分比和重置倒计时，每 60 秒自动刷新。
-
-## Subscribe MiniMax Token Plan / 订阅 Token Plan
-
-If you don't have a MiniMax Token Plan subscription yet, [subscribe here](https://platform.minimaxi.com/subscribe/token-plan?code=2vNMQFJrZt&source=link) — friends get a discount and you get a referral rebate.
-
-还没订阅 MiniMax Token Plan？[点此订阅](https://platform.minimaxi.com/subscribe/token-plan?code=2vNMQFJrZt&source=link) — 好友得折扣，你得返利。
+- `MINIMAX_CN_API_KEY is not configured` —— 检查 `~/.dsh/.credentials.yaml`
+- 读条不显示 —— 确认当前选中的是 MiniMax 模型，再硬刷新（`Ctrl+Shift+R`）
 
 ---
 
-## Development cost / 开发成本
+## English
 
-This plugin was built with assistance from **MiniMax-M3** (the MiniMax China-region MiniMax model). The full session DSH stats for the v1.0.x release cycle:
+Put your MiniMax Coding Plan quota right inside the DSH conversation UI: type `/usage-minimax-cn` for a full report, and while a MiniMax model is selected, a live chip sits in the bottom-right of the composer — auto-refreshed every minute. Hides itself automatically on other models.
 
-本插件由 **MiniMax-M3**（MiniMax 中国区 MiniMax 模型）协助开发。整个发布周期的 DSH 会话统计：
+- **Composer chip**: per-service rows like `coding x% (countdown) · video x% (countdown)` — coding and video have separate quotas
+- **`/usage-minimax-cn` command**: `[rolling|weekly|monthly]` window filter + `--json` machine-readable output
+- **Key safety**: resolved host-side only, never inlined into the browser
 
-| Metric / 指标 | Value / 数值 |
-|---|---|
-| Turns | 28 |
-| Steps | 353 |
-| LLM time / LLM 耗时 | 56m32s |
-| Tool call time / 工具调用耗时 | 17m47s |
-| TTFT avg / 平均首 token 时延 | 5.5s |
-| Decode speed / 解码速度 | 126 tok/s |
-| Cache hit / 缓存命中 | 99% |
-| Input tokens | 54.4M |
-| Output tokens | 185K |
+## Prerequisites
 
-> These numbers reflect the cumulative DSH session that produced the plugin (coding + npm publish + GitHub push + brand-logo swap + README iterations). They are not plugin runtime costs — the plugin itself only calls the MiniMax Coding Plan quota endpoint and produces no LLM tokens.
+- **DSH** installed (Node.js >= 20): `npm install -g @deepseek-ai/dsh`
+- A **MiniMax API key** in `~/.dsh/.credentials.yaml` (shared with `dsh-llm-minimax-cn`):
 
-以上是该 DSH 会话（编码 + npm 发布 + GitHub 推送 + 真实品牌 logo 替换 + README 迭代）的累计统计，仅作开发透明度记录，不代表插件运行时的任何 token 消耗——插件本身只是定时调用 MiniMax Coding Plan 配额接口，不产生 LLM token。
+```yaml
+MINIMAX_CN_API_KEY: <your key>
+```
 
-## License
+## Install
 
-MIT
+```bash
+cd ~/.dsh/profiles
+npm install dsh-usage-minimax-cn --save --registry=https://registry.npmjs.org
+```
+
+Then append to `~/.dsh/profiles/web/cordis.patch.yml`:
+
+```yaml
+- insert:
+    - id: minimax-cn-usage
+      name: 'dsh-usage-minimax-cn'
+```
+
+Restart / refresh the web GUI to activate.
+
+MIT License · Welcome a ⭐ Star!
