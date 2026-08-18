@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="https://img.shields.io/npm/v/dsh-usage-minimax-cn" alt="npm version" />
+  <img src="https://img.shields.io/npm/v/dsh-usage-minimax-cn?label=npm" alt="npm version" />
+  <img src="https://img.shields.io/github/v/release/jooey/dsh-usage-minimax-cn?label=release" alt="GitHub release" />
   <img src="https://img.shields.io/npm/dw/dsh-usage-minimax-cn" alt="npm downloads" />
   <img src="https://img.shields.io/github/stars/jooey/dsh-usage-minimax-cn" alt="GitHub stars" />
   <img src="https://img.shields.io/github/license/jooey/dsh-usage-minimax-cn" alt="GitHub license" />
@@ -314,7 +315,7 @@ MIT License · 欢迎 ⭐ Star！
 
 ## 开发成本（透明记录）
 
-本插件由 **MiniMax-M3**（MiniMax 中国区 MiniMax 模型）协助开发。整个开发会话（截至 v1.0.0，含 npm + GitHub 发布）的 DSH 统计为：
+本插件由 **MiniMax-M3**（MiniMax 中国区 MiniMax 模型）协助开发。整个开发会话（截至 **v1.0.1**，含首次 npm + GitHub 发布 + 用真实品牌 logo 替换占位 SVG）的 DSH 统计为：
 
 | 指标 | 数值 |
 |---|---|
