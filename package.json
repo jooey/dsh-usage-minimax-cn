@@ -1,6 +1,6 @@
 {
   "name": "dsh-usage-minimax-cn",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "DSH command plugin: /usage-minimax-cn command and composer readout for your MiniMax (minimax-cn) Coding Plan subscription quota usage",
   "type": "module",
   "main": "lib/index.js",
