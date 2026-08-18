@@ -19,15 +19,25 @@
 </p>
 
 <p align="center">
-  <strong>🚀 Quick start（两条命令装到 DSH）</strong>
+  <strong>🚀 Quick start（一条命令装到 DSH）</strong>
 </p>
 
 ```bash
-cd /mnt/d/jooeyAICoding/DSH-Desktop/dsh-usage-minimax-cn   # 或者你 clone 下来的路径
-./install.sh
+cd ~/.dsh/profiles
+npm install dsh-usage-minimax-cn --save --registry=https://registry.npmjs.org
 ```
 
-> 完整步骤（含 DSH 安装、patch 注册、PowerShell / 手动安装）见下方 <a href="#install">Install</a>。
+然后在 `~/.dsh/profiles/web/cordis.patch.yml` 里追加：
+
+```yaml
+- insert:
+    - id: minimax-cn-usage
+      name: 'dsh-usage-minimax-cn'
+```
+
+> 装完**刷新 web GUI**（`Ctrl+Shift+R`），模型选择器切到 **MiniMax（minimax-cn）** provider，输入框右下角就出读条了。
+>
+> 其他安装方式（DSH 自带 plugin 命令 / GitHub git 安装 / PowerShell / 源码）见下方 <a href="#install">Install</a>。
 
 一个用于 **DSH（DeepSeek Harness）** 的插件：把你的 **MiniMax（minimax-cn）Coding Plan 订阅配额**直接显示在对话里，并且**只在当前会话选中 MiniMax provider（`minimax-cn`）时展示**；切到其他模型/供应商时自动隐藏。
 
@@ -180,7 +190,15 @@ dsh --version
 
 ## Install
 
-### 方式 A：npm 安装（推荐）
+### 方式 A：DSH 自带 plugin 命令（最简单）
+
+```bash
+dsh plugin --profile web add dsh-usage-minimax-cn
+```
+
+DSH 会自动从 npm 拉取、拷到 `~/.dsh/profiles/node_modules/`、写 cordis.patch.yml（幂等）。一条命令搞定。
+
+### 方式 B：npm 安装（推荐）
 
 ```bash
 cd ~/.dsh/profiles
@@ -195,7 +213,7 @@ npm install dsh-usage-minimax-cn --save --registry=https://registry.npmjs.org
       name: 'dsh-usage-minimax-cn'
 ```
 
-### 方式 B：直接给 DSH 传 GitHub 链接（git 安装）
+### 方式 C：直接给 DSH 传 GitHub 链接（git 安装）
 
 ```bash
 dsh plugin --profile web add github:<用户名>/dsh-usage-minimax-cn
@@ -216,7 +234,7 @@ dsh plugin --profile web add https://github.com/<用户名>/dsh-usage-minimax-cn
       name: 'dsh-usage-minimax-cn'
 ```
 
-### 方式 C：bash 一键脚本（WSL / Linux / macOS 推荐）
+### 方式 D：bash 一键脚本（WSL / Linux / macOS 推荐）
 
 仓库自带 `install.sh`：
 
@@ -235,7 +253,7 @@ cd /mnt/d/jooeyAICoding/DSH-Desktop/dsh-usage-minimax-cn   # 或者你 clone 下
 ./install.sh --help           # 帮助
 ```
 
-### 方式 D：PowerShell 一键脚本（Windows 原生 PowerShell）
+### 方式 E：PowerShell 一键脚本（Windows 原生 PowerShell）
 
 仓库自带 `install.ps1`：
 
@@ -245,7 +263,7 @@ cd /mnt/d/jooeyAICoding/DSH-Desktop/dsh-usage-minimax-cn   # 或者你 clone 下
 
 行为同 `install.sh`，只是 PowerShell 语法。
 
-### 方式 E：源码手动安装
+### 方式 F：源码手动安装
 
 ```bash
 # 1. 拷贝包到 profile 的 node_modules fallback
@@ -258,7 +276,7 @@ cp -r . ~/.dsh/profiles/node_modules/dsh-usage-minimax-cn
 #          name: 'dsh-usage-minimax-cn'
 ```
 
-以下通用步骤（方式 A–E 都要做）：改完 patch 后，**重启 / 刷新** web GUI（该 profile 默认关闭 HMR）。
+以下通用步骤（方式 A–F 都要做）：改完 patch 后，**重启 / 刷新** web GUI（该 profile 默认关闭 HMR）。
 
 ## Usage
 
